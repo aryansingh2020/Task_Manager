@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:5000/api" });
+const API = axios.create({ baseURL: "https://task-manager-backend-34m0.onrender.com" });
 
 const getAuthHeaders = () => {
   const auth = JSON.parse(localStorage.getItem("auth"));
