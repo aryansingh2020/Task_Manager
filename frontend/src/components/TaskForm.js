@@ -1,16 +1,15 @@
 import { useState } from "react";
-import { createTask } from "../utils/api";  // Import API function
+import { createTask } from "../utils/api";
 
 const TaskForm = ({ onTaskAdded }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const token = localStorage.getItem("token");  // Get token from localStorage
+  const token = localStorage.getItem("token"); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted with title:", title);  // Debugging line
+    console.log("Form submitted with title:", title);
 
-    // Check if token exists
     if (!token) {
       console.error("No token found, please log in!");
       alert("Session expired, please log in again.");
@@ -18,12 +17,11 @@ const TaskForm = ({ onTaskAdded }) => {
     }
 
     try {
-      // Call the API to create the task
       const newTask = await createTask({ title, description }, token);
-      console.log("Task created successfully:", newTask);  // Debugging line
-      onTaskAdded();  // Notify parent to refresh task list
-      setTitle("");   // Clear the form input after task creation
-      setDescription("");  // Clear description
+      console.log("Task created successfully:", newTask);
+      onTaskAdded();  
+      setTitle("");  
+      setDescription("");  
     } catch (error) {
       console.error("Error creating task:", error);
       alert("Error creating task. Please try again.");

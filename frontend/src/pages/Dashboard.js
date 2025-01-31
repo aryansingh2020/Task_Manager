@@ -8,7 +8,7 @@ const Dashboard = () => {
   const isAuthenticated = auth?.isAuthenticated;
 
   if (!isAuthenticated) {
-    window.location.href = "/login";  // Redirect if not authenticated
+    window.location.href = "/login";
   }
 
   return (

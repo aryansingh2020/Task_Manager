@@ -2,11 +2,10 @@ import axios from "axios";
 
 const API = axios.create({ baseURL: "http://localhost:5000/api" });
 
-// Authentication APIs
+
 export const register = (data) => API.post("/auth/register", data);
 export const login = (data) => API.post("/auth/login", data);
 
-// Task APIs
 export const fetchTasks = (token) => 
   API.get("/tasks", { headers: { Authorization: `Bearer ${token}` } });
 

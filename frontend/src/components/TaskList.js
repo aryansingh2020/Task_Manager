@@ -15,7 +15,7 @@ const TaskList = ({ refresh }) => {
       setTasks(data);
     };
     loadTasks();
-  }, [refresh, token]);  // Add 'token' to the dependency array
+  }, [refresh, token]); 
 
   const handleDelete = async (id) => {
     await deleteTask(id, token);

@@ -4,7 +4,7 @@ const Task = require("../models/Task");
 
 const router = express.Router();
 
-// Middleware to verify token
+// Middleware
 const authMiddleware = (req, res, next) => {
   const token = req.header("Authorization").replace("Bearer ", "");
   try {
@@ -25,7 +25,7 @@ router.post("/", authMiddleware, async (req, res) => {
   res.json(task);
 });
 
-// Get all tasks for user
+// Get all tasks
 router.get("/", authMiddleware, async (req, res) => {
   const tasks = await Task.find({ userId: req.userId });
   res.json(tasks);
