@@ -2,18 +2,18 @@ import axios from "axios";
 
 const API = axios.create({ baseURL: "http://localhost:5000/api" });
 
+const getAuthHeaders = () => {
+  const auth = JSON.parse(localStorage.getItem("auth"));
+  return { Authorization: `Bearer ${auth?.token}` };
+};
 
 export const register = (data) => API.post("/auth/register", data);
 export const login = (data) => API.post("/auth/login", data);
 
-export const fetchTasks = (token) => 
-  API.get("/tasks", { headers: { Authorization: `Bearer ${token}` } });
+export const fetchTasks = () => API.get("/tasks", { headers: getAuthHeaders() });
 
-export const createTask = (data, token) => 
-  API.post("/tasks", data, { headers: { Authorization: `Bearer ${token}` } });
+export const createTask = (data) => API.post("/tasks", data, { headers: getAuthHeaders() });
 
-export const updateTask = (id, data, token) => 
-  API.put(`/tasks/${id}`, data, { headers: { Authorization: `Bearer ${token}` } });
+export const updateTask = (id, data) => API.put(`/tasks/${id}`, data, { headers: getAuthHeaders() });
 
-export const deleteTask = (id, token) => 
-  API.delete(`/tasks/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+export const deleteTask = (id) => API.delete(`/tasks/${id}`, { headers: getAuthHeaders() });

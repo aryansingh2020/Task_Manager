@@ -4,43 +4,63 @@ const Task = require("../models/Task");
 
 const router = express.Router();
 
-// Middleware
 const authMiddleware = (req, res, next) => {
-  const token = req.header("Authorization").replace("Bearer ", "");
+  const authHeader = req.header("Authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Unauthorized - Missing token" });
+  }
+
+  const token = authHeader.replace("Bearer ", "");
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.userId;
     next();
   } catch (error) {
-    res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: "Unauthorized - Invalid token" });
   }
 };
 
-// Create task
+// Create Task
 router.post("/", authMiddleware, async (req, res) => {
   const { title, description } = req.body;
   const task = new Task({ userId: req.userId, title, description });
 
-  await task.save();
-  res.json(task);
+  try {
+    await task.save();
+    res.status(201).json(task);
+  } catch (error) {
+    res.status(500).json({ error: "Task creation failed" });
+  }
 });
 
-// Get all tasks
+// Get All Tasks
 router.get("/", authMiddleware, async (req, res) => {
-  const tasks = await Task.find({ userId: req.userId });
-  res.json(tasks);
+  try {
+    const tasks = await Task.find({ userId: req.userId });
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch tasks" });
+  }
 });
 
-// Update task
+// Update Task
 router.put("/:id", authMiddleware, async (req, res) => {
-  const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  res.json(task);
+  try {
+    const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(task);
+  } catch (error) {
+    res.status(500).json({ error: "Task update failed" });
+  }
 });
 
-// Delete task
+// Delete Task
 router.delete("/:id", authMiddleware, async (req, res) => {
-  await Task.findByIdAndDelete(req.params.id);
-  res.json({ message: "Task deleted" });
+  try {
+    await Task.findByIdAndDelete(req.params.id);
+    res.json({ message: "Task deleted" });
+  } catch (error) {
+    res.status(500).json({ error: "Task deletion failed" });
+  }
 });
 
 module.exports = router;
